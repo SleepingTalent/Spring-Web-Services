@@ -10,4 +10,9 @@
 
     <sws:annotation-driven/>
 
+    <sws:dynamic-wsdl id="holiday" portTypeName="HumanResource" locationUri="/holidayService/"
+                      targetNamespace="http://mycompany.com/hr/definitions">
+        <sws:xsd location="/xml/schema/holidayRequest.xsd"/>
+    </sws:dynamic-wsdl>
+
 </beans>
