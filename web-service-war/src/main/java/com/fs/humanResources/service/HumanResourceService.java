@@ -1,4 +1,7 @@
 package com.fs.humanResources.service;
 
-public class HumanResourceService {
+import java.util.Date;
+
+public interface HumanResourceService {
+    public void bookHoliday(Date startDate, Date endDate, String name);
 }
