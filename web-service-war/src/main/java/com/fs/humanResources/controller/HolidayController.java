@@ -21,7 +21,7 @@ public class HolidayController {
         this.humanResourceService = humanResourceService;
     }
 
-    @RequestMapping(value = "person", method = RequestMethod.POST)
+    @RequestMapping(value = "addHoliday", method = RequestMethod.POST)
     @ResponseBody
     public String addHoliday(HolidayRequest holidayRequest) {
         try {
