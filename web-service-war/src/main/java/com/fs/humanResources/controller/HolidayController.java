@@ -32,4 +32,10 @@ public class HolidayController {
             return HolidayResponse.FAILURE.toString();
         }
     }
+
+    @RequestMapping(value = "ping", method = RequestMethod.GET)
+    @ResponseBody
+    public String ping() {
+        return HolidayResponse.SUCCESS.toString();
+    }
 }
