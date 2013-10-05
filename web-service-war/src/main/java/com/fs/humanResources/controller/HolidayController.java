@@ -25,7 +25,8 @@ public class HolidayController {
     @ResponseBody
     public String addHoliday(HolidayRequest holidayRequest) {
         try {
-            humanResourceService.bookHoliday(null, null, null);
+            humanResourceService.bookHoliday(
+                    holidayRequest.getStartDate(), holidayRequest.getEndDate(), holidayRequest.getEmployeeId());
             return HolidayResponse.SUCCESS.toString();
         } catch (HolidayRequestException hre) {
             return HolidayResponse.FAILURE.toString();

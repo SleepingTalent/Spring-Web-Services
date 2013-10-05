@@ -9,8 +9,8 @@ import java.util.Date;
 public class HumanResourceServiceImpl implements HumanResourceService{
 
     @Override
-    public void bookHoliday(Date startDate, Date endDate, String name) throws HolidayRequestException {
+    public void bookHoliday(Date startDate, Date endDate, Long employeeId) throws HolidayRequestException {
         System.out.println("Booking holiday for [" +
-                startDate + "-" + endDate + "] for [" + name + "] ");
+                startDate + "-" + endDate + "] for [" + employeeId + "] ");
     }
 }
