@@ -26,7 +26,6 @@ public class APIHelper {
 
     private String host = "myHost";
     private int port = 8080;
-    private static final String PROTOCAL = "http";
 
     private static final String APPLICATION_XML_TYPE = "application/xml";
     private static final String API_PATH = "humanResources-services/api/";
@@ -58,17 +57,19 @@ public class APIHelper {
 
     public HttpResponse sendPostRequest(String apiurl, OutputStream postBody) {
         HttpResponse httpResponse = null;
-        HttpHost httpHost = new HttpHost(host, port, PROTOCAL);
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
         try {
-            log.info("Posting to URL :"+API_PATH+apiurl);
-            HttpPost httpPost = new HttpPost(API_PATH+apiurl);
+            String url = getfullAPIUrl(apiurl);
+            log.info("Posting to URL :"+url);
+
+            HttpPost httpPost = new HttpPost(url);
+            httpPost.addHeader("content-type",APPLICATION_XML_TYPE);
+
             StringEntity entity = new StringEntity(postBody.toString());
-            entity.setContentType(APPLICATION_XML_TYPE);
             httpPost.setEntity(entity);
 
-            httpResponse = httpClient.execute(httpHost, httpPost);
+            httpResponse = httpClient.execute(httpPost);
         } catch (UnsupportedEncodingException e) {
             log.error(e);
         } catch (ClientProtocolException e) {
@@ -79,6 +80,10 @@ public class APIHelper {
             httpClient.getConnectionManager().shutdown();
             return httpResponse;
         }
+    }
+
+    private String getfullAPIUrl(String apiurl) {
+        return "http://"+host+":"+port+"/"+API_PATH+apiurl;
     }
 
     public void setHostAndPort(String host, int port) {

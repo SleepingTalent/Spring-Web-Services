@@ -5,10 +5,9 @@ import com.fs.humanResources.domain.HolidayRequest;
 import com.fs.humanResources.domain.HolidayResponse;
 import com.fs.humanResources.service.HumanResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/api")
@@ -22,8 +21,7 @@ public class HolidayController {
     }
 
     @RequestMapping(value = "addHoliday", method = RequestMethod.POST)
-    @ResponseBody
-    public HolidayResponse addHoliday(HolidayRequest holidayRequest) {
+    public @ResponseBody HolidayResponse addHoliday(@RequestBody HolidayRequest holidayRequest) {
         try {
             humanResourceService.bookHoliday(
                     holidayRequest.getStartDate(), holidayRequest.getEndDate(), holidayRequest.getEmployeeId());
