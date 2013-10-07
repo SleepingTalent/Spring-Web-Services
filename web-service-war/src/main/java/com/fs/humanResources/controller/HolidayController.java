@@ -21,7 +21,8 @@ public class HolidayController {
     }
 
     @RequestMapping(value = "addHoliday", method = RequestMethod.POST)
-    public @ResponseBody HolidayResponse addHoliday(@RequestBody HolidayRequest holidayRequest) {
+    @ResponseBody
+    public HolidayResponse addHoliday(@RequestBody HolidayRequest holidayRequest) {
         try {
             humanResourceService.bookHoliday(
                     holidayRequest.getStartDate(), holidayRequest.getEndDate(), holidayRequest.getEmployeeId());
