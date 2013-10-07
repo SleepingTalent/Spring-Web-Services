@@ -1,7 +1,13 @@
 package com.fs.humanResources.domain;
 
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.Date;
 
+@XmlRootElement(name = "HolidayRequest")
+@XmlType(propOrder = {"employeeId","startDate","endDate"})
 public class HolidayRequest {
 
     Date startDate;
@@ -10,6 +16,7 @@ public class HolidayRequest {
 
     Long employeeId;
 
+    @XmlElement
     public Long getEmployeeId() {
         return employeeId;
     }
@@ -18,6 +25,7 @@ public class HolidayRequest {
         this.employeeId = employeeId;
     }
 
+    @XmlElement
     public Date getStartDate() {
         return startDate;
     }
@@ -26,6 +34,7 @@ public class HolidayRequest {
         this.startDate = startDate;
     }
 
+    @XmlElement
     public Date getEndDate() {
         return endDate;
     }

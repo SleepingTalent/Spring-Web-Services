@@ -8,8 +8,11 @@ public abstract class BaseSeleniumTest {
 
     private WebDriver driver;
 
+    protected APIHelper apiHelper;
+
     protected BaseSeleniumTest() {
         driver = initialiseDriver();
+        apiHelper = new APIHelper();
     }
 
     @After
@@ -25,8 +28,5 @@ public abstract class BaseSeleniumTest {
         return driver;
     }
 
-    protected void callUrl(String url) {
-        driver.get(url);
-    }
 
 }

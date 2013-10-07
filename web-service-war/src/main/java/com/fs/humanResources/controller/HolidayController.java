@@ -23,19 +23,22 @@ public class HolidayController {
 
     @RequestMapping(value = "addHoliday", method = RequestMethod.POST)
     @ResponseBody
-    public String addHoliday(HolidayRequest holidayRequest) {
+    public HolidayResponse addHoliday(HolidayRequest holidayRequest) {
         try {
             humanResourceService.bookHoliday(
                     holidayRequest.getStartDate(), holidayRequest.getEndDate(), holidayRequest.getEmployeeId());
-            return HolidayResponse.SUCCESS.toString();
+            return createHolidayResponse("Success",holidayRequest);
         } catch (HolidayRequestException hre) {
-            return HolidayResponse.FAILURE.toString();
+            return createHolidayResponse("Failure", holidayRequest);
         }
     }
 
-    @RequestMapping(value = "ping", method = RequestMethod.GET)
-    @ResponseBody
-    public String ping() {
-        return HolidayResponse.SUCCESS.toString();
+    private HolidayResponse createHolidayResponse(String status, HolidayRequest holidayRequest) {
+        HolidayResponse holidayResponse = new HolidayResponse();
+        holidayResponse.setEmployeeId(holidayRequest.getEmployeeId());
+        holidayResponse.setStartDate(holidayRequest.getStartDate());
+        holidayResponse.setEndDate(holidayRequest.getEndDate());
+        holidayResponse.setStatus(status);
+        return holidayResponse;
     }
 }
