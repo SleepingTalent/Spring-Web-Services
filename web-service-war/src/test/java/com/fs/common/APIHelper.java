@@ -19,6 +19,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
+import java.util.Date;
 
 public class APIHelper {
 
@@ -95,4 +96,15 @@ public class APIHelper {
         }
     }
 
+    public HolidayRequest createHolidayRequest(long employeeId) {
+        return createHolidayRequest(employeeId,new Date(), new Date());
+    }
+
+    private HolidayRequest createHolidayRequest(long employeeId, Date startDate, Date endDate) {
+        HolidayRequest holidayRequest = new HolidayRequest();
+        holidayRequest.setEmployeeId(employeeId);
+        holidayRequest.setStartDate(startDate);
+        holidayRequest.setEndDate(endDate);
+        return holidayRequest;
+    }
 }

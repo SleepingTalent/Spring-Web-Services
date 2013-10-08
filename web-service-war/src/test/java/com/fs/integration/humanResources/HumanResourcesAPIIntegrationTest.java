@@ -27,26 +27,15 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
 
     @Test
     public void addHoliday_holidayResponseReturnWithSuccessStatus_whenHolidaySuccessfullyAdded() throws JAXBException, IOException {
-        HolidayRequest holidayRequest = new HolidayRequest();
-        holidayRequest.setEmployeeId(1234l);
-        holidayRequest.setStartDate(new Date());
-        holidayRequest.setEndDate(new Date());
+        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l);
 
         OutputStream postBody = apiHelper.marshalHolidayRequest(holidayRequest);
         HttpResponse response = apiHelper.sendPostRequest("addHoliday", postBody);
 
-        Assert.assertNotNull("HttpResponse is Null!", response);
-        Assert.assertNotNull("HttpResponse StatusLine is Null!", response.getStatusLine());
-
         log.info("Response Status Code " + response.getStatusLine().getStatusCode());
-        Assert.assertEquals(200,response.getStatusLine().getStatusCode());
+        Assert.assertEquals(200, response.getStatusLine().getStatusCode());
 
-        HttpEntity httpEntity = response.getEntity();
-        Assert.assertNotNull("HttpEntity is Null!",httpEntity);
-
-        HolidayResponse actualHolidayResponse = apiHelper.unmarshalHolidayResponse(httpEntity);
-
-        log.info(actualHolidayResponse.toString());
-        Assert.assertEquals("Success",actualHolidayResponse.getStatus());
+        HolidayResponse actualHolidayResponse = apiHelper.unmarshalHolidayResponse(response.getEntity());
+        Assert.assertEquals("Success", actualHolidayResponse.getStatus());
     }
 }
