@@ -4,20 +4,30 @@ import com.fs.humanResources.common.exception.HolidayRequestException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import org.apache.log4j.Logger;
 
 @Service
 public class HumanResourceServiceImpl implements HumanResourceService {
 
+    Logger log = Logger.getLogger(HumanResourceServiceImpl.class);
+
     @Override
     public void bookHoliday(Date startDate, Date endDate, Long employeeId) throws HolidayRequestException {
 
-        if (startDate == null) {
-            throw new HolidayRequestException();
-        } else if (endDate == null) {
-            throw new HolidayRequestException();
+        if (isBookingValid(startDate, endDate)) {
+            log.info("Booking holiday for ["+startDate+"-"+endDate+"] for ["+employeeId+"]");
         } else {
-            System.out.println("Booking holiday for [" +
-                    startDate + "-" + endDate + "] for [" + employeeId + "] ");
+            throw new HolidayRequestException();
         }
+    }
+
+    private boolean isBookingValid(Date startDate, Date endDate) {
+        boolean valid = true;
+
+        if ((startDate == null) || (endDate == null) || (startDate.after(endDate))) {
+            valid = false;
+        }
+
+        return valid;
     }
 }

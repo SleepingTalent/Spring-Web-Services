@@ -96,10 +96,6 @@ public class APIHelper {
         }
     }
 
-    public HolidayRequest createHolidayRequest(long employeeId) {
-        return createHolidayRequest(employeeId,new Date(), new Date());
-    }
-
     public HolidayRequest createHolidayRequest(long employeeId, Date startDate, Date endDate) {
         HolidayRequest holidayRequest = new HolidayRequest();
         holidayRequest.setEmployeeId(employeeId);
@@ -107,4 +103,5 @@ public class APIHelper {
         holidayRequest.setEndDate(endDate);
         return holidayRequest;
     }
+
 }
