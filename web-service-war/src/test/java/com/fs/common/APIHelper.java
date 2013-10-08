@@ -24,11 +24,19 @@ public class APIHelper {
 
     Logger log = Logger.getLogger(APIHelper.class);
 
-    private String host = "myHost";
-    private int port = 8080;
-
-    private static final String APPLICATION_XML_TYPE = "application/xml";
     private static final String API_PATH = "humanResources-services/api/";
+    private static final String APPLICATION_XML_TYPE = "application/xml";
+
+    private String host;
+    private int port;
+
+    private DefaultHttpClient httpClient;
+
+    public APIHelper(String host, int port) {
+        this.host = host;
+        this.port = port;
+        this.httpClient = new DefaultHttpClient();
+    }
 
     public <T> Object unmarshalEntityToObject(HttpEntity entity, Class<T> classType) throws IOException, JAXBException {
         String xmlString = EntityUtils.toString(entity);
@@ -52,7 +60,7 @@ public class APIHelper {
     }
 
     public HolidayResponse unmarshalHolidayResponse(HttpEntity entity) throws JAXBException, IOException {
-        return (HolidayResponse)unmarshalEntityToObject(entity, HolidayResponse.class);
+        return (HolidayResponse) unmarshalEntityToObject(entity, HolidayResponse.class);
     }
 
     public HttpResponse sendPostRequest(String apiurl, OutputStream postBody) {
@@ -61,33 +69,30 @@ public class APIHelper {
 
         try {
             String url = getfullAPIUrl(apiurl);
-            log.info("Posting to URL :"+url);
+            log.info("Posting to URL :" + url);
 
             HttpPost httpPost = new HttpPost(url);
-            httpPost.addHeader("content-type",APPLICATION_XML_TYPE);
+            httpPost.addHeader("content-type", APPLICATION_XML_TYPE);
 
             StringEntity entity = new StringEntity(postBody.toString());
             httpPost.setEntity(entity);
 
             httpResponse = httpClient.execute(httpPost);
-        } catch (UnsupportedEncodingException e) {
-            log.error(e);
-        } catch (ClientProtocolException e) {
-            log.error(e);
         } catch (IOException e) {
             log.error(e);
         } finally {
-            httpClient.getConnectionManager().shutdown();
             return httpResponse;
         }
     }
 
     private String getfullAPIUrl(String apiurl) {
-        return "http://"+host+":"+port+"/"+API_PATH+apiurl;
+        return "http://" + host + ":" + port + "/" + API_PATH + apiurl;
     }
 
-    public void setHostAndPort(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public void closeHttpClient() {
+        if (httpClient != null) {
+            httpClient.getConnectionManager().shutdown();
+        }
     }
+
 }

@@ -27,8 +27,10 @@ public class HolidayController {
             humanResourceService.bookHoliday(
                     holidayRequest.getStartDate(), holidayRequest.getEndDate(), holidayRequest.getEmployeeId());
             return createHolidayResponse("Success",holidayRequest);
+            //return "Sucess";
         } catch (HolidayRequestException hre) {
-            return createHolidayResponse("Failure", holidayRequest);
+           return createHolidayResponse("Failure", holidayRequest);
+            //return "Failure";
         }
     }
 

@@ -7,7 +7,7 @@ import java.util.Date;
 
 @XmlRootElement(name = "HolidayResponse")
 @XmlType(propOrder = {"employeeId","startDate","endDate","status"})
-public class HolidayResponse extends HolidayRequest {
+public class HolidayResponse {
 
     Long employeeId;
 
@@ -51,5 +51,15 @@ public class HolidayResponse extends HolidayRequest {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    @Override
+    public String toString() {
+        return "HolidayResponse{" +
+                "employeeId=" + employeeId +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

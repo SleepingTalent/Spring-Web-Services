@@ -46,8 +46,8 @@ public class HolidayControllerTest extends BaseUnitTest {
         doThrow(new HolidayRequestException()).when(humanResourceService).
                 bookHoliday(Matchers.<Date>anyObject(), Matchers.<Date>anyObject(), anyLong());
 
-       HolidayResponse response = holidayController.addHoliday(holidayRequest);
-       Assert.assertEquals("Failure",response.getStatus());
+        HolidayResponse response = holidayController.addHoliday(holidayRequest);
+        Assert.assertEquals("Failure", response.getStatus());
     }
 
     @Test
@@ -55,8 +55,8 @@ public class HolidayControllerTest extends BaseUnitTest {
         HolidayResponse response = holidayController.addHoliday(holidayRequest);
 
         verify(humanResourceService, times(1)).bookHoliday(
-                eq(holidayRequest.getStartDate()),eq(holidayRequest.getEndDate()),eq(holidayRequest.getEmployeeId()));
-        Assert.assertEquals("Success",response.getStatus());
+                eq(holidayRequest.getStartDate()), eq(holidayRequest.getEndDate()), eq(holidayRequest.getEmployeeId()));
+        Assert.assertEquals("Success", response.getStatus());
     }
 
 }
