@@ -33,7 +33,7 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
 
     @Test
     public void addHoliday_holidayResponseReturnWithSuccessStatus_whenHolidaySuccessfullyAdded() throws JAXBException, IOException {
-        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l,startOfMonth,endOfMonth);
+        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l, startOfMonth, endOfMonth);
 
         OutputStream postBody = apiHelper.marshalHolidayRequest(holidayRequest);
         HttpResponse response = apiHelper.sendPostRequest("addHoliday", postBody);
@@ -47,7 +47,7 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
 
     @Test
     public void addHoliday_holidayResponseReturnWithStatus_whenStartDateIsNull() throws JAXBException, IOException {
-        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l,null,endOfMonth);
+        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l, null, endOfMonth);
 
         OutputStream postBody = apiHelper.marshalHolidayRequest(holidayRequest);
         HttpResponse response = apiHelper.sendPostRequest("addHoliday", postBody);
@@ -61,7 +61,7 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
 
     @Test
     public void addHoliday_holidayResponseReturnWithStatus_whenEndDateIsNull() throws JAXBException, IOException {
-        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l,startOfMonth,null);
+        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l, startOfMonth, null);
 
         OutputStream postBody = apiHelper.marshalHolidayRequest(holidayRequest);
         HttpResponse response = apiHelper.sendPostRequest("addHoliday", postBody);
@@ -75,7 +75,7 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
 
     @Test
     public void addHoliday_holidayResponseReturnWithStatus_whenStartDateIsAfterEndDate() throws JAXBException, IOException {
-        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l,endOfMonth,startOfMonth);
+        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l, endOfMonth, startOfMonth);
 
         OutputStream postBody = apiHelper.marshalHolidayRequest(holidayRequest);
         HttpResponse response = apiHelper.sendPostRequest("addHoliday", postBody);
@@ -85,5 +85,9 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
 
         HolidayResponse actualHolidayResponse = apiHelper.unmarshalHolidayResponse(response.getEntity());
         Assert.assertEquals("Failure", actualHolidayResponse.getStatus());
+
+        Assert.assertEquals(holidayRequest.getEmployeeId(), actualHolidayResponse.getEmployeeId());
+        Assert.assertEquals(holidayRequest.getStartDate(), actualHolidayResponse.getStartDate());
+        Assert.assertEquals(holidayRequest.getEndDate(), actualHolidayResponse.getEndDate());
     }
 }

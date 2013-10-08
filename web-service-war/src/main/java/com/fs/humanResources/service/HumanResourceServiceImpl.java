@@ -1,6 +1,8 @@
 package com.fs.humanResources.service;
 
 import com.fs.humanResources.common.exception.HolidayRequestException;
+import com.fs.humanResources.model.dao.HolidayDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -11,11 +13,18 @@ public class HumanResourceServiceImpl implements HumanResourceService {
 
     Logger log = Logger.getLogger(HumanResourceServiceImpl.class);
 
+    HolidayDAO holidayDAO;
+
+    @Autowired
+    public HumanResourceServiceImpl(HolidayDAO holidayDAO) {
+        this.holidayDAO = holidayDAO;
+    }
+
     @Override
     public void bookHoliday(Date startDate, Date endDate, Long employeeId) throws HolidayRequestException {
 
         if (isBookingValid(startDate, endDate)) {
-            log.info("Booking holiday for ["+startDate+"-"+endDate+"] for ["+employeeId+"]");
+           holidayDAO.addHoliday(startDate, endDate, employeeId);
         } else {
             throw new HolidayRequestException();
         }
