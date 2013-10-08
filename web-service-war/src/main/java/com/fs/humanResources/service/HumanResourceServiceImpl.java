@@ -22,12 +22,10 @@ public class HumanResourceServiceImpl implements HumanResourceService {
     }
 
     private boolean isBookingValid(Date startDate, Date endDate) {
-        boolean valid = true;
-
         if ((startDate == null) || (endDate == null) || (startDate.after(endDate))) {
-            valid = false;
+           return false;
         }
 
-        return valid;
+        return true;
     }
 }
