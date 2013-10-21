@@ -7,7 +7,7 @@ public abstract class BaseWebServiceTest {
     protected APIHelper apiHelper;
 
     protected BaseWebServiceTest() {
-        apiHelper = new APIHelper("localhost", 8181);
+        apiHelper = new APIHelper("localhost", 8080);
     }
 
     @After
