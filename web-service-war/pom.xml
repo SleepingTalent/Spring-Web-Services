@@ -31,40 +31,27 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
+            <!-- Maven Tomcat Plugin -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
-                <version>1.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.jboss.as.plugins</groupId>
-                <artifactId>jboss-as-maven-plugin</artifactId>
-                <version>7.4.Final</version>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <url>http://127.0.0.1:8080/manager/text</url>
+                    <server>TomcatServer</server>
+                    <path>/${project.build.finalName}</path>
+                </configuration>
                 <executions>
-                    <!-- Undeploy the application on clean -->
-                    <execution>
-                        <id>undeploy</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>undeploy</goal>
-                        </goals>
-                        <configuration>
-                            <skip>${skip.deployment}</skip>
-                            <ignoreMissingDeployment>true</ignoreMissingDeployment>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>deploy</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>deploy</goal>
                         </goals>
-                        <configuration>
-                            <skip>${skip.deployment}</skip>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

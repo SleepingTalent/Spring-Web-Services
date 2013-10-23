@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: jaxen:jaxen:full">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/jaxen/jaxen/full/jaxen-full.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/jaxen/jaxen/full/jaxen-full-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/jaxen/jaxen/full/jaxen-full-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
