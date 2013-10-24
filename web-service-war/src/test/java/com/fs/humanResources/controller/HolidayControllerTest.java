@@ -1,6 +1,7 @@
 package com.fs.humanResources.controller;
 
 import com.fs.common.BaseUnitTest;
+import com.fs.humanResources.common.exception.EmployeeNotFoundException;
 import com.fs.humanResources.common.exception.HolidayRequestException;
 import com.fs.humanResources.domain.HolidayRequest;
 import com.fs.humanResources.domain.HolidayResponse;
@@ -42,7 +43,7 @@ public class HolidayControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void addHoliday_returnsFailureResponse_whenAddRequestFails() throws HolidayRequestException {
+    public void addHoliday_returnsFailureResponse_whenAddRequestFails() throws HolidayRequestException, EmployeeNotFoundException {
         doThrow(new HolidayRequestException()).when(humanResourceService).
                 bookHoliday(Matchers.<Date>anyObject(), Matchers.<Date>anyObject(), anyLong());
 
@@ -51,7 +52,7 @@ public class HolidayControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void addHoliday_returnsSuccessResponse_whenAddRequestSuceeds() throws HolidayRequestException {
+    public void addHoliday_returnsSuccessResponse_whenAddRequestSuceeds() throws HolidayRequestException, EmployeeNotFoundException {
         HolidayResponse response = holidayController.addHoliday(holidayRequest);
 
         verify(humanResourceService, times(1)).bookHoliday(

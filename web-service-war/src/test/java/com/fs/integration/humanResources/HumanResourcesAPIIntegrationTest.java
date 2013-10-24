@@ -1,10 +1,19 @@
 package com.fs.integration.humanResources;
 
 import com.fs.common.BaseWebServiceTest;
+import com.fs.common.PersistenceHelper;
+import com.fs.humanResources.common.exception.DeleteEmployeeException;
+import com.fs.humanResources.common.exception.EmployeeNotFoundException;
+import com.fs.humanResources.common.exception.SaveEmployeeException;
 import com.fs.humanResources.domain.HolidayRequest;
 import com.fs.humanResources.domain.HolidayResponse;
+import com.fs.humanResources.model.address.entities.Address;
+import com.fs.humanResources.model.employee.dao.EmployeeDAO;
+import com.fs.humanResources.model.employee.dao.EmployeeDAOImpl;
+import com.fs.humanResources.model.employee.entities.Employee;
 import org.apache.http.HttpResponse;
 import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,11 +33,40 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
     Date startOfMonth;
     Date endOfMonth;
 
+    Employee employee;
+
+    EmployeeDAO employeeDAO;
+
     @Before
-    public void setUp() throws ParseException {
+    public void setUp() throws ParseException, SaveEmployeeException {
         sdf = new SimpleDateFormat("yyyy-MM-dd");
         startOfMonth = sdf.parse("2009-12-01");
         endOfMonth = sdf.parse("2009-12-31");
+
+        Address address = new Address();
+        address.setHouseNumber("50");
+        address.setAddressFirstLine(PersistenceHelper.getUniqueString(8));
+        address.setAddressSecondLine("Domain Court");
+        address.setTownCity("Progammer City");
+        address.setPostCode("AB1CDX");
+        address.setPrimaryAddress(true);
+
+        employee = new Employee();
+        employee.setFirstName("James");
+        employee.setLastName(PersistenceHelper.getUniqueString(8));
+
+        employee.setDateOfBirth(sdf.parse("1976-07-15"));
+
+        employee.addAddress(address);
+
+        employeeDAO = new EmployeeDAOImpl(PersistenceHelper.getSessionFactory());
+        employeeDAO.saveEmployee(employee);
+    }
+
+    @After
+    public void tearDown() throws EmployeeNotFoundException, DeleteEmployeeException {
+        Employee foundEmployee = employeeDAO.findEmployee(employee.getId());
+        employeeDAO.deleteEmployee(foundEmployee);
     }
 
     @Test
