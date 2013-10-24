@@ -49,13 +49,13 @@
                             <goal>deploy</goal>
                         </goals>
                     </execution>
-                    <execution>
+                   <!-- <execution>
                            <id>undeploy</id>
                            <phase>post-integration-test</phase>
                            <goals>
                                <goal>undeploy</goal>
                            </goals>
-                       </execution>
+                       </execution>   -->
                     <!--  <execution>
                            <id>start</id>
                            <phase>pre-integration-test</phase>

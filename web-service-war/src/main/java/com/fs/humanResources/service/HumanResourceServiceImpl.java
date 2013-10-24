@@ -23,6 +23,8 @@ public class HumanResourceServiceImpl implements HumanResourceService {
     @Override
     public void bookHoliday(Date startDate, Date endDate, Long employeeId) throws HolidayRequestException {
 
+        log.info("Booking Holiday for :"+employeeId);
+
         if (isBookingValid(startDate, endDate)) {
            holidayDAO.addHoliday(startDate, endDate, employeeId);
         } else {
@@ -32,9 +34,11 @@ public class HumanResourceServiceImpl implements HumanResourceService {
 
     private boolean isBookingValid(Date startDate, Date endDate) {
         if ((startDate == null) || (endDate == null) || (startDate.after(endDate))) {
+           log.info("Booking is not valid!");
            return false;
         }
 
+        log.info("Booking is invalid!");
         return true;
     }
 }
