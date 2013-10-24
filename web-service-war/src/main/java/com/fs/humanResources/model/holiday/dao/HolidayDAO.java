@@ -1,4 +1,4 @@
-package com.fs.humanResources.model.dao;
+package com.fs.humanResources.model.holiday.dao;
 
 import java.util.Date;
 

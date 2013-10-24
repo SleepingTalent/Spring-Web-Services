@@ -1,6 +1,5 @@
-package com.fs.humanResources.model.dao;
+package com.fs.humanResources.model.holiday.dao;
 
-import com.fs.humanResources.domain.HolidayRequest;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 

@@ -2,7 +2,7 @@ package com.fs.humanResources.service;
 
 import com.fs.common.BaseUnitTest;
 import com.fs.humanResources.common.exception.HolidayRequestException;
-import com.fs.humanResources.model.dao.HolidayDAO;
+import com.fs.humanResources.model.holiday.dao.HolidayDAO;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

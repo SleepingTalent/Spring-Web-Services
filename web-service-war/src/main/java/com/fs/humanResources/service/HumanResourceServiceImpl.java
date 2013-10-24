@@ -1,9 +1,9 @@
 package com.fs.humanResources.service;
 
 import com.fs.humanResources.common.exception.HolidayRequestException;
-import com.fs.humanResources.model.dao.HolidayDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.fs.humanResources.model.holiday.dao.HolidayDAO;
 
 import java.util.Date;
 import org.apache.log4j.Logger;
