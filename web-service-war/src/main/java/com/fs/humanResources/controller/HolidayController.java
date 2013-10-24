@@ -1,5 +1,6 @@
 package com.fs.humanResources.controller;
 
+import com.fs.humanResources.common.exception.EmployeeNotFoundException;
 import com.fs.humanResources.common.exception.HolidayRequestException;
 import com.fs.humanResources.domain.HolidayRequest;
 import com.fs.humanResources.domain.HolidayResponse;
@@ -33,6 +34,8 @@ public class HolidayController {
             humanResourceService.bookHoliday(holidayRequest.getStartDate(), holidayRequest.getEndDate(), holidayRequest.getEmployeeId());
             return createHolidayResponse("Success", holidayRequest);
         } catch (HolidayRequestException hre) {
+            return createHolidayResponse("Failure", holidayRequest);
+        } catch (EmployeeNotFoundException e) {
             return createHolidayResponse("Failure", holidayRequest);
         }
     }

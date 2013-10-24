@@ -1,9 +1,11 @@
 package com.fs.humanResources.service;
 
+import com.fs.humanResources.common.exception.EmployeeNotFoundException;
 import com.fs.humanResources.common.exception.HolidayRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fs.humanResources.model.holiday.dao.HolidayDAO;
+import com.fs.humanResources.model.employee.dao.EmployeeDAO;
 
 import java.util.Date;
 import org.apache.log4j.Logger;
@@ -15,15 +17,19 @@ public class HumanResourceServiceImpl implements HumanResourceService {
 
     HolidayDAO holidayDAO;
 
+    EmployeeDAO employeeDAO;
+
     @Autowired
-    public HumanResourceServiceImpl(HolidayDAO holidayDAO) {
+    public HumanResourceServiceImpl(HolidayDAO holidayDAO, EmployeeDAO employeeDAO) {
         this.holidayDAO = holidayDAO;
+        this.employeeDAO = employeeDAO;
     }
 
     @Override
-    public void bookHoliday(Date startDate, Date endDate, Long employeeId) throws HolidayRequestException {
+    public void bookHoliday(Date startDate, Date endDate, Long employeeId) throws HolidayRequestException, EmployeeNotFoundException {
 
         log.info("Booking Holiday for :"+employeeId);
+        employeeDAO.findEmployee(employeeId);
 
         if (isBookingValid(startDate, endDate)) {
            holidayDAO.addHoliday(startDate, endDate, employeeId);

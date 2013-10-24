@@ -1,6 +1,7 @@
 package com.fs.humanResources.service;
 
 import com.fs.common.BaseUnitTest;
+import com.fs.humanResources.common.exception.EmployeeNotFoundException;
 import com.fs.humanResources.common.exception.HolidayRequestException;
 import com.fs.humanResources.model.holiday.dao.HolidayDAO;
 import org.junit.Before;
@@ -35,23 +36,28 @@ public class HumanResourceServiceImplTest extends BaseUnitTest {
     }
 
     @Test
-    public void bookHoliday_addsHolidayAsExpected() throws HolidayRequestException {
+    public void bookHoliday_addsHolidayAsExpected() throws HolidayRequestException, EmployeeNotFoundException {
         humanResourceService.bookHoliday(startOfMonth,endOfMonth, 1345l);
         verify(holidayDAO, times(1)).addHoliday(eq(startOfMonth),eq(endOfMonth),eq(1345l));
     }
 
     @Test(expected = HolidayRequestException.class)
-    public void bookHoliday_throwsHolidayRequestException_whenStartDateIsNull() throws HolidayRequestException {
+    public void bookHoliday_throwsHolidayRequestException_whenStartDateIsNull() throws HolidayRequestException, EmployeeNotFoundException {
         humanResourceService.bookHoliday(null,new Date(), 1345l);
     }
 
     @Test(expected = HolidayRequestException.class)
-    public void bookHoliday_throwsHolidayRequestException_whenEndDateIsNull() throws HolidayRequestException {
+    public void bookHoliday_throwsHolidayRequestException_whenEndDateIsNull() throws HolidayRequestException, EmployeeNotFoundException {
         humanResourceService.bookHoliday(new Date(), null, 1345l);
     }
 
     @Test(expected = HolidayRequestException.class)
-    public void bookHoliday_throwsHolidayRequestException_whenEndDateBeforeStartDate() throws HolidayRequestException {
+    public void bookHoliday_throwsHolidayRequestException_whenEndDateBeforeStartDate() throws HolidayRequestException, EmployeeNotFoundException {
+        humanResourceService.bookHoliday(endOfMonth, startOfMonth, 1345l);
+    }
+
+    @Test(expected = EmployeeNotFoundException.class)
+    public void bookHoliday_throwsEmployeeNotFoundException_whenEmployeeIdNotFound() throws HolidayRequestException, EmployeeNotFoundException {
         humanResourceService.bookHoliday(endOfMonth, startOfMonth, 1345l);
     }
 }
