@@ -38,22 +38,4 @@ public class EmployeeDAOImpl extends BaseDAOImpl<Employee, Long> implements Empl
             throw new EmployeeNotFoundException("Employee Not Found with Id : " + employeeId);
         }
     }
-
-    @Override
-    public void saveEmployee(Employee employee) throws SaveEmployeeException {
-        try {
-            saveOrUpdate(employee);
-        } catch (SaveEntityException e) {
-            throw new SaveEmployeeException();
-        }
-    }
-
-    @Override
-    public void deleteEmployee(Employee employee) throws DeleteEmployeeException {
-        try {
-            delete(employee);
-        } catch (DeleteEntityException e) {
-            throw new DeleteEmployeeException();
-        }
-    }
 }

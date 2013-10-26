@@ -34,37 +34,4 @@ public class HolidayDAOImpl extends BaseDAOImpl<Holiday, Long> implements Holida
         }
     }
 
-    @Override
-    public Holiday findHoliday(Long holidayId) throws HolidayNotFoundException {
-        Holiday holiday = findById(holidayId);
-
-        if (holiday == null) {
-            log.error("No Holidays found with Id :"+holidayId);
-            throw new HolidayNotFoundException();
-        }
-
-        return holiday;
-    }
-
-    @Override
-    public void deleteHoliday(Holiday holiday) throws DeleteHolidayException {
-        try {
-            delete(holiday);
-        } catch (DeleteEntityException dee) {
-            log.error("Error deleting Holiday with Id :"+holiday.getId(),dee);
-            throw new DeleteHolidayException();
-        }
-    }
-
-    @Override
-    public List<Holiday> findHolidays(Employee employee) throws HolidayNotFoundException {
-        List<Holiday> results = findByCriteria(Restrictions.eq("employee", employee));
-
-        if (results == null && results.isEmpty()) {
-            log.error("No Holidays for Employee with Id :"+employee.getId());
-            throw new HolidayNotFoundException();
-        }
-
-        return results;
-    }
 }
