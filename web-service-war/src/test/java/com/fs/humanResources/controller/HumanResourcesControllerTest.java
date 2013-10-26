@@ -19,10 +19,10 @@ import java.util.Date;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.*;
 
-public class HolidayControllerTest extends BaseUnitTest {
+public class HumanResourcesControllerTest extends BaseUnitTest {
 
     @InjectMocks
-    HolidayController holidayController;
+    HumanResourcesController humanResourcesController;
 
     @Mock
     HumanResourceService humanResourceService;
@@ -44,20 +44,22 @@ public class HolidayControllerTest extends BaseUnitTest {
 
     @Test
     public void addHoliday_returnsFailureResponse_whenAddRequestFails() throws HolidayRequestException, EmployeeNotFoundException {
-        doThrow(new HolidayRequestException()).when(humanResourceService).
+        doThrow(new HolidayRequestException("AddRequestFail")).when(humanResourceService).
                 bookHoliday(Matchers.<Date>anyObject(), Matchers.<Date>anyObject(), anyLong());
 
-        HolidayResponse response = holidayController.addHoliday(holidayRequest);
+        HolidayResponse response = humanResourcesController.addHoliday(holidayRequest);
         Assert.assertEquals("Failure", response.getStatus());
+        Assert.assertEquals("AddRequestFail", response.getMessage());
     }
 
     @Test
     public void addHoliday_returnsSuccessResponse_whenAddRequestSuceeds() throws HolidayRequestException, EmployeeNotFoundException {
-        HolidayResponse response = holidayController.addHoliday(holidayRequest);
+        HolidayResponse response = humanResourcesController.addHoliday(holidayRequest);
 
         verify(humanResourceService, times(1)).bookHoliday(
                 eq(holidayRequest.getStartDate()), eq(holidayRequest.getEndDate()), eq(holidayRequest.getEmployeeId()));
         Assert.assertEquals("Success", response.getStatus());
+        Assert.assertEquals("Holiday Added Successfully", response.getMessage());
     }
 
 }

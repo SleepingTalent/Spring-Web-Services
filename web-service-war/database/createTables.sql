@@ -36,3 +36,19 @@ DROP INDEX address_postcode_index ON address;
 
 CREATE INDEX address_postcode_index ON address (postCode);
 
+DROP TABLE IF EXISTS holiday;
+
+CREATE TABLE holiday (
+  id INT NOT NULL AUTO_INCREMENT,
+  employee_id INT NOT NULL,
+  startDate DATE NOT NULL,
+  endDate DATE NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (employee_id)
+  REFERENCES employee(id)
+);
+
+DROP INDEX holiday_employee_index ON holiday;
+
+CREATE INDEX holiday_employee_index ON holiday (employee_id);
+

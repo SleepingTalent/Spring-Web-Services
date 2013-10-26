@@ -2,6 +2,8 @@ package com.fs.humanResources.controller;
 
 import com.fs.humanResources.common.exception.EmployeeNotFoundException;
 import com.fs.humanResources.common.exception.HolidayRequestException;
+import com.fs.humanResources.common.exception.SaveHolidayException;
+import com.fs.humanResources.domain.ResponseHelper;
 import com.fs.humanResources.domain.HolidayRequest;
 import com.fs.humanResources.domain.HolidayResponse;
 import com.fs.humanResources.service.HumanResourceService;
@@ -15,14 +17,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/api")
-public class HolidayController {
+public class HumanResourcesController {
 
-    Logger log = Logger.getLogger(HolidayController.class);
+    Logger log = Logger.getLogger(HumanResourcesController.class);
 
     HumanResourceService humanResourceService;
 
     @Autowired
-    public HolidayController(HumanResourceService humanResourceService) {
+    public HumanResourcesController(HumanResourceService humanResourceService) {
         this.humanResourceService = humanResourceService;
     }
 
@@ -32,20 +34,11 @@ public class HolidayController {
         try {
             log.info("Holiday Request Received!");
             humanResourceService.bookHoliday(holidayRequest.getStartDate(), holidayRequest.getEndDate(), holidayRequest.getEmployeeId());
-            return createHolidayResponse("Success", holidayRequest);
+            log.info("Holiday Added Successfully");
+            return ResponseHelper.createHolidayResponse("Success", "Holiday Added Successfully", holidayRequest);
         } catch (HolidayRequestException hre) {
-            return createHolidayResponse("Failure", holidayRequest);
-        } catch (EmployeeNotFoundException e) {
-            return createHolidayResponse("Failure", holidayRequest);
+            log.error("Holiday Request Error",hre);
+            return ResponseHelper.createHolidayResponse("Failure", hre.getMessage(),holidayRequest);
         }
-    }
-
-    private HolidayResponse createHolidayResponse(String status, HolidayRequest holidayRequest) {
-        HolidayResponse holidayResponse = new HolidayResponse();
-        holidayResponse.setEmployeeId(holidayRequest.getEmployeeId());
-        holidayResponse.setStartDate(holidayRequest.getStartDate());
-        holidayResponse.setEndDate(holidayRequest.getEndDate());
-        holidayResponse.setStatus(status);
-        return holidayResponse;
     }
 }

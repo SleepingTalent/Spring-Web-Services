@@ -1,16 +1,17 @@
-package com.fs.integration.humanResources;
+package com.fs.integration.humanResources.controller;
 
 import com.fs.common.BaseWebServiceTest;
 import com.fs.common.PersistenceHelper;
-import com.fs.humanResources.common.exception.DeleteEmployeeException;
-import com.fs.humanResources.common.exception.EmployeeNotFoundException;
-import com.fs.humanResources.common.exception.SaveEmployeeException;
+import com.fs.humanResources.common.exception.*;
 import com.fs.humanResources.domain.HolidayRequest;
 import com.fs.humanResources.domain.HolidayResponse;
 import com.fs.humanResources.model.address.entities.Address;
 import com.fs.humanResources.model.employee.dao.EmployeeDAO;
 import com.fs.humanResources.model.employee.dao.EmployeeDAOImpl;
 import com.fs.humanResources.model.employee.entities.Employee;
+import com.fs.humanResources.model.holiday.dao.HolidayDAO;
+import com.fs.humanResources.model.holiday.dao.HolidayDAOImpl;
+import com.fs.humanResources.model.holiday.entities.Holiday;
 import org.apache.http.HttpResponse;
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -24,10 +25,11 @@ import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
-public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
+public class HumanResourcesControllerIntegrationTest extends BaseWebServiceTest {
 
-    Logger log = Logger.getLogger(HumanResourcesAPIIntegrationTest.class);
+    Logger log = Logger.getLogger(HumanResourcesControllerIntegrationTest.class);
 
     SimpleDateFormat sdf;
     Date startOfMonth;
@@ -36,6 +38,10 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
     Employee employee;
 
     EmployeeDAO employeeDAO;
+
+    HolidayDAO holidayDAO;
+
+    boolean holidaySaved = false;
 
     @Before
     public void setUp() throws ParseException, SaveEmployeeException {
@@ -61,16 +67,26 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
 
         employeeDAO = new EmployeeDAOImpl(PersistenceHelper.getSessionFactory());
         employeeDAO.saveEmployee(employee);
+
+        holidayDAO = new HolidayDAOImpl(PersistenceHelper.getSessionFactory());
     }
 
     @After
-    public void tearDown() throws EmployeeNotFoundException, DeleteEmployeeException {
+    public void tearDown() throws EmployeeNotFoundException, DeleteEmployeeException, HolidayNotFoundException, DeleteHolidayException {
+        if(holidaySaved) {
+           List<Holiday> foundHolidays = holidayDAO.findHolidays(employee);
+           for(Holiday holiday : foundHolidays) {
+               holidayDAO.deleteHoliday(holiday);
+           }
+        }
+
         Employee foundEmployee = employeeDAO.findEmployee(employee.getId());
         employeeDAO.deleteEmployee(foundEmployee);
+
     }
 
     @Test
-    public void addHoliday_holidayResponseReturnWithSuccessStatus_whenHolidaySuccessfullyAdded() throws JAXBException, IOException {
+    public void addHoliday_holidayResponseReturnWithSuccessStatus_whenHolidaySuccessfullyAdded() throws JAXBException, IOException, HolidayNotFoundException {
         HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l, startOfMonth, endOfMonth);
 
         OutputStream postBody = apiHelper.marshalHolidayRequest(holidayRequest);
@@ -81,6 +97,13 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
 
         HolidayResponse actualHolidayResponse = apiHelper.unmarshalHolidayResponse(response.getEntity());
         Assert.assertEquals("Success", actualHolidayResponse.getStatus());
+        Assert.assertEquals("", actualHolidayResponse.getMessage());
+
+        List<Holiday> foundHolidays = holidayDAO.findHolidays(employee);
+        Assert.assertEquals(1,foundHolidays.size());
+        Assert.assertEquals(employee.getId(),foundHolidays.get(0).getId());
+        Assert.assertEquals(startOfMonth,foundHolidays.get(0).getStartDate());
+        Assert.assertEquals(endOfMonth,foundHolidays.get(0).getEndDate());
     }
 
     @Test
@@ -95,6 +118,7 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
 
         HolidayResponse actualHolidayResponse = apiHelper.unmarshalHolidayResponse(response.getEntity());
         Assert.assertEquals("Failure", actualHolidayResponse.getStatus());
+        Assert.assertEquals("", actualHolidayResponse.getMessage());
     }
 
     @Test
@@ -109,6 +133,7 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
 
         HolidayResponse actualHolidayResponse = apiHelper.unmarshalHolidayResponse(response.getEntity());
         Assert.assertEquals("Failure", actualHolidayResponse.getStatus());
+        Assert.assertEquals("", actualHolidayResponse.getMessage());
     }
 
     @Test
@@ -127,5 +152,6 @@ public class HumanResourcesAPIIntegrationTest extends BaseWebServiceTest {
         Assert.assertEquals(holidayRequest.getEmployeeId(), actualHolidayResponse.getEmployeeId());
         Assert.assertEquals(holidayRequest.getStartDate(), actualHolidayResponse.getStartDate());
         Assert.assertEquals(holidayRequest.getEndDate(), actualHolidayResponse.getEndDate());
+        Assert.assertEquals("", actualHolidayResponse.getMessage());
     }
 }

@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.Date;
 
 @XmlRootElement(name = "HolidayResponse")
-@XmlType(propOrder = {"employeeId","startDate","endDate","status"})
+@XmlType(propOrder = {"employeeId","startDate","endDate","status", "message"})
 public class HolidayResponse {
 
     Long employeeId;
@@ -16,6 +16,17 @@ public class HolidayResponse {
     Date endDate;
 
     String status;
+
+    String message;
+
+    @XmlElement
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     @XmlElement
     public String getStatus() {
@@ -59,7 +70,8 @@ public class HolidayResponse {
                 "employeeId=" + employeeId +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", status='" + status + '\'' +
+                ", status='" + status +
+                ", message='" + message + '\'' +
                 '}';
     }
 }
