@@ -1,16 +1,13 @@
 package com.fs.integration.humanResources.controller;
 
 import com.fs.common.BaseWebServiceTest;
+import com.fs.common.HibernateHelper;
 import com.fs.common.PersistenceHelper;
 import com.fs.humanResources.common.exception.*;
 import com.fs.humanResources.domain.HolidayRequest;
 import com.fs.humanResources.domain.HolidayResponse;
 import com.fs.humanResources.model.address.entities.Address;
-import com.fs.humanResources.model.employee.dao.EmployeeDAO;
-import com.fs.humanResources.model.employee.dao.EmployeeDAOImpl;
 import com.fs.humanResources.model.employee.entities.Employee;
-import com.fs.humanResources.model.holiday.dao.HolidayDAO;
-import com.fs.humanResources.model.holiday.dao.HolidayDAOImpl;
 import com.fs.humanResources.model.holiday.entities.Holiday;
 import org.apache.http.HttpResponse;
 import org.apache.log4j.Logger;
@@ -37,14 +34,10 @@ public class HumanResourcesControllerIntegrationTest extends BaseWebServiceTest 
 
     Employee employee;
 
-    EmployeeDAO employeeDAO;
-
-    HolidayDAO holidayDAO;
-
     boolean holidaySaved = false;
 
     @Before
-    public void setUp() throws ParseException, SaveEmployeeException {
+    public void setUp() throws ParseException, SaveEmployeeException, SaveEntityException {
         sdf = new SimpleDateFormat("yyyy-MM-dd");
         startOfMonth = sdf.parse("2009-12-01");
         endOfMonth = sdf.parse("2009-12-31");
@@ -65,29 +58,26 @@ public class HumanResourcesControllerIntegrationTest extends BaseWebServiceTest 
 
         employee.addAddress(address);
 
-        employeeDAO = new EmployeeDAOImpl(PersistenceHelper.getSessionFactory());
-        employeeDAO.saveEmployee(employee);
-
-        holidayDAO = new HolidayDAOImpl(PersistenceHelper.getSessionFactory());
+        PersistenceHelper.saveEmployee(employee);
     }
 
     @After
-    public void tearDown() throws EmployeeNotFoundException, DeleteEmployeeException, HolidayNotFoundException, DeleteHolidayException {
+    public void tearDown() throws HolidayNotFoundException, DeleteEntityException {
         if(holidaySaved) {
-           List<Holiday> foundHolidays = holidayDAO.findHolidays(employee);
+           List<Holiday> foundHolidays = PersistenceHelper.findHolidays(employee);
            for(Holiday holiday : foundHolidays) {
-               holidayDAO.deleteHoliday(holiday);
+               PersistenceHelper.deleteHoliday(holiday);
            }
         }
 
-        Employee foundEmployee = employeeDAO.findEmployee(employee.getId());
-        employeeDAO.deleteEmployee(foundEmployee);
+        Employee foundEmployee = PersistenceHelper.findEmployee(employee.getId());
+        PersistenceHelper.deleteEmployee(foundEmployee);
 
     }
 
     @Test
     public void addHoliday_holidayResponseReturnWithSuccessStatus_whenHolidaySuccessfullyAdded() throws JAXBException, IOException, HolidayNotFoundException {
-        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l, startOfMonth, endOfMonth);
+        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(employee.getId(), startOfMonth, endOfMonth);
 
         OutputStream postBody = apiHelper.marshalHolidayRequest(holidayRequest);
         HttpResponse response = apiHelper.sendPostRequest("addHoliday", postBody);
@@ -97,18 +87,20 @@ public class HumanResourcesControllerIntegrationTest extends BaseWebServiceTest 
 
         HolidayResponse actualHolidayResponse = apiHelper.unmarshalHolidayResponse(response.getEntity());
         Assert.assertEquals("Success", actualHolidayResponse.getStatus());
-        Assert.assertEquals("", actualHolidayResponse.getMessage());
+        Assert.assertEquals("Holiday Added Successfully", actualHolidayResponse.getMessage());
 
-        List<Holiday> foundHolidays = holidayDAO.findHolidays(employee);
+        List<Holiday> foundHolidays = PersistenceHelper.findHolidays(employee);
         Assert.assertEquals(1,foundHolidays.size());
-        Assert.assertEquals(employee.getId(),foundHolidays.get(0).getId());
+        Assert.assertEquals(employee.getId(),foundHolidays.get(0).getEmployee().getId());
         Assert.assertEquals(startOfMonth,foundHolidays.get(0).getStartDate());
         Assert.assertEquals(endOfMonth,foundHolidays.get(0).getEndDate());
+
+        holidaySaved = true;
     }
 
     @Test
     public void addHoliday_holidayResponseReturnWithStatus_whenStartDateIsNull() throws JAXBException, IOException {
-        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l, null, endOfMonth);
+        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(employee.getId(), null, endOfMonth);
 
         OutputStream postBody = apiHelper.marshalHolidayRequest(holidayRequest);
         HttpResponse response = apiHelper.sendPostRequest("addHoliday", postBody);
@@ -118,12 +110,12 @@ public class HumanResourcesControllerIntegrationTest extends BaseWebServiceTest 
 
         HolidayResponse actualHolidayResponse = apiHelper.unmarshalHolidayResponse(response.getEntity());
         Assert.assertEquals("Failure", actualHolidayResponse.getStatus());
-        Assert.assertEquals("", actualHolidayResponse.getMessage());
+        Assert.assertEquals("Holiday Booking is not Valid", actualHolidayResponse.getMessage());
     }
 
     @Test
     public void addHoliday_holidayResponseReturnWithStatus_whenEndDateIsNull() throws JAXBException, IOException {
-        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l, startOfMonth, null);
+        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(employee.getId(), startOfMonth, null);
 
         OutputStream postBody = apiHelper.marshalHolidayRequest(holidayRequest);
         HttpResponse response = apiHelper.sendPostRequest("addHoliday", postBody);
@@ -133,12 +125,12 @@ public class HumanResourcesControllerIntegrationTest extends BaseWebServiceTest 
 
         HolidayResponse actualHolidayResponse = apiHelper.unmarshalHolidayResponse(response.getEntity());
         Assert.assertEquals("Failure", actualHolidayResponse.getStatus());
-        Assert.assertEquals("", actualHolidayResponse.getMessage());
+        Assert.assertEquals("Holiday Booking is not Valid", actualHolidayResponse.getMessage());
     }
 
     @Test
     public void addHoliday_holidayResponseReturnWithStatus_whenStartDateIsAfterEndDate() throws JAXBException, IOException {
-        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(1234l, endOfMonth, startOfMonth);
+        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(employee.getId(), endOfMonth, startOfMonth);
 
         OutputStream postBody = apiHelper.marshalHolidayRequest(holidayRequest);
         HttpResponse response = apiHelper.sendPostRequest("addHoliday", postBody);
@@ -152,6 +144,25 @@ public class HumanResourcesControllerIntegrationTest extends BaseWebServiceTest 
         Assert.assertEquals(holidayRequest.getEmployeeId(), actualHolidayResponse.getEmployeeId());
         Assert.assertEquals(holidayRequest.getStartDate(), actualHolidayResponse.getStartDate());
         Assert.assertEquals(holidayRequest.getEndDate(), actualHolidayResponse.getEndDate());
-        Assert.assertEquals("", actualHolidayResponse.getMessage());
+        Assert.assertEquals("Holiday Booking is not Valid", actualHolidayResponse.getMessage());
+    }
+
+    @Test
+    public void addHoliday_holidayResponseReturnWithStatus_whenEmployeeNotFound() throws JAXBException, IOException {
+        HolidayRequest holidayRequest = apiHelper.createHolidayRequest(9999, startOfMonth, endOfMonth);
+
+        OutputStream postBody = apiHelper.marshalHolidayRequest(holidayRequest);
+        HttpResponse response = apiHelper.sendPostRequest("addHoliday", postBody);
+
+        log.info("Response Status Code " + response.getStatusLine().getStatusCode());
+        Assert.assertEquals(200, response.getStatusLine().getStatusCode());
+
+        HolidayResponse actualHolidayResponse = apiHelper.unmarshalHolidayResponse(response.getEntity());
+        Assert.assertEquals("Failure", actualHolidayResponse.getStatus());
+
+        Assert.assertEquals(holidayRequest.getEmployeeId(), actualHolidayResponse.getEmployeeId());
+        Assert.assertEquals(holidayRequest.getStartDate(), actualHolidayResponse.getStartDate());
+        Assert.assertEquals(holidayRequest.getEndDate(), actualHolidayResponse.getEndDate());
+        Assert.assertEquals("Employee Not Found with Id : 9999", actualHolidayResponse.getMessage());
     }
 }

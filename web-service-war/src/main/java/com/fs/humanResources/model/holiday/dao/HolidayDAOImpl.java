@@ -30,7 +30,7 @@ public class HolidayDAOImpl extends BaseDAOImpl<Holiday, Long> implements Holida
             saveOrUpdate(holiday);
         } catch (SaveEntityException see) {
             log.error("No Holidays for Employee with Id :"+holiday.getEmployee().getId(),see);
-            throw new SaveHolidayException();
+            throw new SaveHolidayException("No Holidays for Employee with Id :"+holiday.getEmployee().getId());
         }
     }
 

@@ -49,7 +49,7 @@
                             <goal>deploy</goal>
                         </goals>
                     </execution>
-                   <execution>
+                <execution>
                            <id>undeploy</id>
                            <phase>post-integration-test</phase>
                            <goals>

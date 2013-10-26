@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+
 
 @Repository
 @Transactional
@@ -28,12 +30,12 @@ public class EmployeeDAOImpl extends BaseDAOImpl<Employee, Long> implements Empl
             Employee employee = findById(employeeId);
 
             if (employee == null) {
-                throw new EmployeeNotFoundException();
+                throw new EmployeeNotFoundException("Employee Not Found with Id : " + employeeId);
             }
             return employee;
-        } catch (HibernateException he) {
-            log.error("Employee Not Found with Id : " + employeeId, he);
-            throw new EmployeeNotFoundException();
+        } catch (EntityNotFoundException enfe) {
+            log.error("Employee Not Found with Id : " + employeeId, enfe);
+            throw new EmployeeNotFoundException("Employee Not Found with Id : " + employeeId);
         }
     }
 

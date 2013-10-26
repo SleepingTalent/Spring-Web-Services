@@ -1,17 +1,13 @@
 package com.fs.humanResources.service;
 
 import com.fs.common.BaseUnitTest;
-import com.fs.common.PersistenceHelper;
 import com.fs.humanResources.common.exception.EmployeeNotFoundException;
 import com.fs.humanResources.common.exception.HolidayRequestException;
 import com.fs.humanResources.common.exception.SaveHolidayException;
-import com.fs.humanResources.model.address.entities.Address;
 import com.fs.humanResources.model.employee.dao.EmployeeDAO;
-import com.fs.humanResources.model.employee.dao.EmployeeDAOImpl;
 import com.fs.humanResources.model.employee.entities.Employee;
 import com.fs.humanResources.model.holiday.dao.HolidayDAO;
 import com.fs.humanResources.model.holiday.entities.Holiday;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -85,14 +81,14 @@ public class HumanResourceServiceImplTest extends BaseUnitTest {
 
     @Test(expected = HolidayRequestException.class)
     public void bookHoliday_throwsEmployeeNotFoundException_whenEmployeeIdNotFound() throws HolidayRequestException, EmployeeNotFoundException {
-        when(employeeDAO.findEmployee(anyLong())).thenThrow(new EmployeeNotFoundException());
+        when(employeeDAO.findEmployee(anyLong())).thenThrow(new EmployeeNotFoundException(""));
         humanResourceService.bookHoliday(endOfMonth, startOfMonth, 1345l);
     }
 
 
     @Test(expected = HolidayRequestException.class)
     public void bookHoliday_throwsEmployeeNotFoundException_whenHolidaydNotAdded() throws HolidayRequestException, EmployeeNotFoundException, SaveHolidayException {
-        doThrow(new SaveHolidayException()).when(holidayDAO).addHoliday(Matchers.<Holiday>anyObject());
+        doThrow(new SaveHolidayException("")).when(holidayDAO).addHoliday(Matchers.<Holiday>anyObject());
         humanResourceService.bookHoliday(endOfMonth, startOfMonth, 1345l);
     }
 }

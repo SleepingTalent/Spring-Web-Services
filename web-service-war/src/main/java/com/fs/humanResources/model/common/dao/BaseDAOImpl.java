@@ -2,10 +2,7 @@ package com.fs.humanResources.model.common.dao;
 
 import com.fs.humanResources.common.exception.DeleteEntityException;
 import com.fs.humanResources.common.exception.SaveEntityException;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.criterion.Criterion;
 
 import javax.persistence.EntityNotFoundException;
@@ -29,49 +26,28 @@ public abstract class BaseDAOImpl<E, I extends Serializable> implements BaseDAO<
 
     @Override
     public E findById(I id) throws EntityNotFoundException {
-        Session session = getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        boolean rollback = false;
-
         try {
             return (E) getCurrentSession().get(entityClass, id);
-        } catch (RuntimeException re) {
-            rollback = true;
+        } catch (HibernateException he) {
             throw new EntityNotFoundException();
-        } finally {
-            handleTransaction(tx, rollback);
         }
     }
 
     @Override
     public void saveOrUpdate(E entity) throws SaveEntityException {
-        Session session = getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        boolean rollback = false;
-
         try {
-            session.saveOrUpdate(entity);
-        } catch (RuntimeException re) {
-            rollback = true;
+            getCurrentSession().saveOrUpdate(entity);
+        } catch (HibernateException he) {
             throw new SaveEntityException();
-        } finally {
-            handleTransaction(tx, rollback);
         }
     }
 
     @Override
     public void delete(E entity) throws DeleteEntityException {
-        Session session = getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        boolean rollback = false;
-
         try {
-            session.delete(entity);
-        } catch (RuntimeException re) {
-            rollback = true;
+            getCurrentSession().delete(entity);
+        } catch (HibernateException he) {
             throw new DeleteEntityException();
-        } finally {
-            handleTransaction(tx, rollback);
         }
     }
 
@@ -82,13 +58,4 @@ public abstract class BaseDAOImpl<E, I extends Serializable> implements BaseDAO<
         return criteria.list();
     }
 
-    private void handleTransaction(Transaction tx, boolean rollback) {
-        if (tx != null) {
-            if (rollback) {
-                tx.rollback();
-            } else {
-                tx.commit();
-            }
-        }
-    }
 }

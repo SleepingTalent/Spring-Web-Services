@@ -1,6 +1,7 @@
 package com.fs.humanResources.service;
 
 import com.fs.humanResources.common.exception.EmployeeNotFoundException;
+import com.fs.humanResources.common.exception.HolidayNotValidException;
 import com.fs.humanResources.common.exception.HolidayRequestException;
 import com.fs.humanResources.common.exception.SaveHolidayException;
 import com.fs.humanResources.model.employee.dao.EmployeeDAO;
@@ -45,18 +46,12 @@ public class HumanResourceServiceImpl implements HumanResourceService {
                 holidayDAO.addHoliday(holiday);
             } else {
                 log.error("Holiday Booking is not Valid");
-                throw new HolidayRequestException("Holiday Booking is not Valid");
+                throw new HolidayNotValidException("Holiday Booking is not Valid");
             }
 
-        } catch (EmployeeNotFoundException e) {
-            log.error("Employee Not Found",e);
-            throw new HolidayRequestException("Employee Not Found");
-        } catch (SaveHolidayException e) {
-            log.error("Error Adding Holiday",e);
-            throw new HolidayRequestException("Error Adding Holiday");
-        } catch (Exception e) {
-            log.error("Unexpected Exception",e);
-            throw new HolidayRequestException("Unexpected Exception");
+        } catch (EmployeeNotFoundException | HolidayNotValidException | SaveHolidayException | Exception e) {
+            log.error(e.getMessage(),e);
+            throw new HolidayRequestException(e.getMessage());
         }
     }
 
