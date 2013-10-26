@@ -21,12 +21,8 @@ public class HumanResourcesController {
 
     Logger log = Logger.getLogger(HumanResourcesController.class);
 
-    HumanResourceService humanResourceService;
-
     @Autowired
-    public HumanResourcesController(HumanResourceService humanResourceService) {
-        this.humanResourceService = humanResourceService;
-    }
+    HumanResourceService humanResourceService;
 
     @RequestMapping(value = "addHoliday", method = RequestMethod.POST)
     @ResponseBody

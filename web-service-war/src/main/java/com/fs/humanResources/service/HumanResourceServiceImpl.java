@@ -21,15 +21,11 @@ public class HumanResourceServiceImpl implements HumanResourceService {
 
     Logger log = Logger.getLogger(HumanResourceServiceImpl.class);
 
+    @Autowired
     HolidayDAO holidayDAO;
 
-    EmployeeDAO employeeDAO;
-
     @Autowired
-    public HumanResourceServiceImpl(HolidayDAO holidayDAO, EmployeeDAO employeeDAO) {
-        this.holidayDAO = holidayDAO;
-        this.employeeDAO = employeeDAO;
-    }
+    EmployeeDAO employeeDAO;
 
     @Override
     public void bookHoliday(Date startDate, Date endDate, Long employeeId) throws HolidayRequestException {
