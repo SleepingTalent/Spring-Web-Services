@@ -1,19 +1,14 @@
 package com.fs.common;
 
-import com.fs.humanResources.common.exception.DeleteEntityException;
-import com.fs.humanResources.common.exception.HolidayNotFoundException;
-import com.fs.humanResources.common.exception.SaveEntityException;
+import com.fs.humanResources.model.common.exception.DeleteEntityException;
+import com.fs.humanResources.model.holiday.exception.HolidayNotFoundException;
+import com.fs.humanResources.model.common.exception.SaveEntityException;
 import com.fs.humanResources.model.employee.entities.Employee;
 import com.fs.humanResources.model.holiday.entities.Holiday;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 public class PersistenceHelper {

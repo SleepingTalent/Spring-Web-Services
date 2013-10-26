@@ -1,6 +1,6 @@
 package com.fs.humanResources.controller;
 
-import com.fs.humanResources.common.exception.HolidayRequestException;
+import com.fs.humanResources.service.exception.HolidayRequestException;
 import com.fs.humanResources.domain.HolidayRequest;
 import com.fs.humanResources.domain.HolidayResponse;
 import com.fs.humanResources.domain.ResponseHelper;

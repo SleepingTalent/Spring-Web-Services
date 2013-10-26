@@ -1,7 +1,7 @@
 package com.fs.humanResources.model.common.dao;
 
-import com.fs.humanResources.common.exception.DeleteEntityException;
-import com.fs.humanResources.common.exception.SaveEntityException;
+import com.fs.humanResources.model.common.exception.DeleteEntityException;
+import com.fs.humanResources.model.common.exception.SaveEntityException;
 import org.hibernate.*;
 import org.hibernate.criterion.Criterion;
 

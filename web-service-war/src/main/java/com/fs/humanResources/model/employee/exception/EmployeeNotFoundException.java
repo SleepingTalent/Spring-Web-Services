@@ -1,4 +1,4 @@
-package com.fs.humanResources.common.exception;
+package com.fs.humanResources.model.employee.exception;
 
 public class EmployeeNotFoundException extends Throwable {
 

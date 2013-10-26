@@ -1,10 +1,9 @@
 package com.fs.humanResources.model.employee.dao;
 
-import com.fs.humanResources.common.exception.*;
 import com.fs.humanResources.model.common.dao.BaseDAOImpl;
 import com.fs.humanResources.model.employee.entities.Employee;
+import com.fs.humanResources.model.employee.exception.EmployeeNotFoundException;
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

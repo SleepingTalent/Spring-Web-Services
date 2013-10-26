@@ -1,6 +1,6 @@
 package com.fs.humanResources.service;
 
-import com.fs.humanResources.common.exception.HolidayRequestException;
+import com.fs.humanResources.service.exception.HolidayRequestException;
 
 import java.util.Date;
 

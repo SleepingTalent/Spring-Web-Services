@@ -1,13 +1,13 @@
 package com.fs.humanResources.service;
 
-import com.fs.humanResources.common.exception.EmployeeNotFoundException;
-import com.fs.humanResources.common.exception.HolidayNotValidException;
-import com.fs.humanResources.common.exception.HolidayRequestException;
-import com.fs.humanResources.common.exception.SaveHolidayException;
+import com.fs.humanResources.model.employee.exception.EmployeeNotFoundException;
+import com.fs.humanResources.model.holiday.exception.SaveHolidayException;
 import com.fs.humanResources.model.employee.dao.EmployeeDAO;
 import com.fs.humanResources.model.employee.entities.Employee;
 import com.fs.humanResources.model.holiday.dao.HolidayDAO;
 import com.fs.humanResources.model.holiday.entities.Holiday;
+import com.fs.humanResources.service.exception.HolidayNotValidException;
+import com.fs.humanResources.service.exception.HolidayRequestException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

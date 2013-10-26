@@ -1,16 +1,15 @@
 package com.fs.common;
 
 
-import com.fs.humanResources.common.exception.*;
 import com.fs.humanResources.model.address.entities.Address;
+import com.fs.humanResources.model.common.exception.DeleteEntityException;
+import com.fs.humanResources.model.common.exception.SaveEntityException;
 import com.fs.humanResources.model.employee.entities.Employee;
 import com.fs.humanResources.model.holiday.entities.Holiday;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 

@@ -1,4 +1,4 @@
-package com.fs.humanResources.common.exception;
+package com.fs.humanResources.service.exception;
 
 public class HolidayRequestException extends Throwable {
 

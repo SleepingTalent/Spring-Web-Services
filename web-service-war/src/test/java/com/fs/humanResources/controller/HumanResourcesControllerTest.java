@@ -1,8 +1,8 @@
 package com.fs.humanResources.controller;
 
 import com.fs.common.BaseUnitTest;
-import com.fs.humanResources.common.exception.EmployeeNotFoundException;
-import com.fs.humanResources.common.exception.HolidayRequestException;
+import com.fs.humanResources.model.employee.exception.EmployeeNotFoundException;
+import com.fs.humanResources.service.exception.HolidayRequestException;
 import com.fs.humanResources.domain.HolidayRequest;
 import com.fs.humanResources.domain.HolidayResponse;
 import com.fs.humanResources.service.HumanResourceService;

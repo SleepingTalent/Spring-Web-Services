@@ -1,13 +1,14 @@
 package com.fs.integration.humanResources.controller;
 
 import com.fs.common.BaseWebServiceTest;
-import com.fs.common.HibernateHelper;
 import com.fs.common.PersistenceHelper;
-import com.fs.humanResources.common.exception.*;
 import com.fs.humanResources.domain.HolidayRequest;
 import com.fs.humanResources.domain.HolidayResponse;
 import com.fs.humanResources.model.address.entities.Address;
+import com.fs.humanResources.model.common.exception.DeleteEntityException;
+import com.fs.humanResources.model.common.exception.SaveEntityException;
 import com.fs.humanResources.model.employee.entities.Employee;
+import com.fs.humanResources.model.holiday.exception.HolidayNotFoundException;
 import com.fs.humanResources.model.holiday.entities.Holiday;
 import org.apache.http.HttpResponse;
 import org.apache.log4j.Logger;
@@ -37,7 +38,7 @@ public class HumanResourcesControllerIntegrationTest extends BaseWebServiceTest 
     boolean holidaySaved = false;
 
     @Before
-    public void setUp() throws ParseException, SaveEmployeeException, SaveEntityException {
+    public void setUp() throws ParseException, SaveEntityException {
         sdf = new SimpleDateFormat("yyyy-MM-dd");
         startOfMonth = sdf.parse("2009-12-01");
         endOfMonth = sdf.parse("2009-12-31");
