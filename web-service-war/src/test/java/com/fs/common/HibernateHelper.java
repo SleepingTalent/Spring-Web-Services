@@ -80,6 +80,45 @@ public class HibernateHelper {
         }
     }
 
+    public static <T> List<T> findByCriteria(Class<T> entityClass,Criterion criterion) throws EntityNotFoundException {
+        boolean rollback = false;
+        Session session = HibernateHelper.getSessionFactory().getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+
+        try {
+            Criteria criteria =  HibernateHelper.getSessionFactory().getCurrentSession().createCriteria(entityClass);
+            criteria.add(criterion);
+            List<T> results=  criteria.list();
+
+            if (results == null && results.isEmpty()) {
+                throw new EntityNotFoundException();
+            }
+
+            return results;
+        }catch (Exception ex) {
+            log.error(ex);
+            rollback = true;
+            throw new EntityNotFoundException();
+        }finally {
+            HibernateHelper.handleTransaction(rollback, transaction);
+        }
+    }
+
+    public static <T> T findById(Class<T> entityClass, Long id) {
+        boolean rollback = false;
+        Session session = HibernateHelper.getSessionFactory().getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+
+        try {
+            return (T) session.get(entityClass, id);
+        } catch (HibernateException he) {
+            log.error(he);
+            throw new EntityNotFoundException();
+        }  finally {
+            HibernateHelper.handleTransaction(rollback, transaction);
+        }
+    }
+
     public static void handleTransaction(boolean rollback, Transaction transaction) {
         if(rollback) {
           transaction.rollback();

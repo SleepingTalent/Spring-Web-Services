@@ -37,42 +37,10 @@ public class PersistenceHelper {
     }
 
     public static List<Holiday> findHolidays(Employee employee) throws HolidayNotFoundException {
-        boolean rollback = false;
-        Session session = HibernateHelper.getSessionFactory().getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-
-        try {
-
-            Criteria criteria =  HibernateHelper.getSessionFactory().getCurrentSession().createCriteria(Holiday.class);
-            criteria.add(Restrictions.eq("employee", employee));
-            List<Holiday> results=  criteria.list();
-
-            if (results == null && results.isEmpty()) {
-                throw new HolidayNotFoundException();
-            }
-
-            return results;
-        }catch (Exception ex) {
-            log.error(ex);
-            rollback = true;
-            throw new HolidayNotFoundException();
-        }finally {
-            HibernateHelper.handleTransaction(rollback, transaction);
-        }
+        return HibernateHelper.findByCriteria(Holiday.class,Restrictions.eq("employee", employee));
     }
 
     public static Employee findEmployee(Long id) {
-        boolean rollback = false;
-        Session session = HibernateHelper.getSessionFactory().getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-
-        try {
-            return (Employee) session.get(Employee.class, id);
-        } catch (HibernateException he) {
-            log.error(he);
-            throw new EntityNotFoundException();
-        }  finally {
-            HibernateHelper.handleTransaction(rollback, transaction);
-        }
+        return HibernateHelper.findById(Employee.class,id);
     }
 }
