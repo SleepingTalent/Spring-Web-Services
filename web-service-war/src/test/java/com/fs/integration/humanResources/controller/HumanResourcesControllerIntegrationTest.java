@@ -29,7 +29,6 @@ public class HumanResourcesControllerIntegrationTest extends BaseWebServiceTest 
 
     Logger log = Logger.getLogger(HumanResourcesControllerIntegrationTest.class);
 
-    SimpleDateFormat sdf;
     Date startOfMonth;
     Date endOfMonth;
 
@@ -39,25 +38,10 @@ public class HumanResourcesControllerIntegrationTest extends BaseWebServiceTest 
 
     @Before
     public void setUp() throws ParseException, SaveEntityException {
-        sdf = new SimpleDateFormat("yyyy-MM-dd");
         startOfMonth = sdf.parse("2009-12-01");
         endOfMonth = sdf.parse("2009-12-31");
 
-        Address address = new Address();
-        address.setHouseNumber("50");
-        address.setAddressFirstLine(PersistenceHelper.getUniqueString(8));
-        address.setAddressSecondLine("Domain Court");
-        address.setTownCity("Progammer City");
-        address.setPostCode("AB1CDX");
-        address.setPrimaryAddress(true);
-
-        employee = new Employee();
-        employee.setFirstName("James");
-        employee.setLastName(PersistenceHelper.getUniqueString(8));
-
-        employee.setDateOfBirth(sdf.parse("1976-07-15"));
-
-        employee.addAddress(address);
+        employee = createEmployee();
 
         PersistenceHelper.saveEmployee(employee);
     }
@@ -73,7 +57,6 @@ public class HumanResourcesControllerIntegrationTest extends BaseWebServiceTest 
 
         Employee foundEmployee = PersistenceHelper.findEmployee(employee.getId());
         PersistenceHelper.deleteEmployee(foundEmployee);
-
     }
 
     @Test

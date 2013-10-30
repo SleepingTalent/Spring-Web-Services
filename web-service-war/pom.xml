@@ -42,7 +42,7 @@
                     <path>/${project.build.finalName}</path>
                 </configuration>
                 <executions>
-                    <execution>
+                  <!--  <execution>
                         <id>deploy</id>
                         <phase>pre-integration-test</phase>
                         <goals>
@@ -55,21 +55,25 @@
                            <goals>
                                <goal>undeploy</goal>
                            </goals>
-                       </execution>
-                    <!--  <execution>
-                           <id>start</id>
-                           <phase>pre-integration-test</phase>
-                           <goals>
-                               <goal>run</goal>
-                           </goals>
-                       </execution>
-                       <execution>
-                           <id>stop</id>
-                           <phase>post-integration-test</phase>
-                           <goals>
-                               <goal>shutdown</goal>
-                           </goals>
-                       </execution>    -->
+                       </execution>  -->
+                    <execution>
+                        <id>start-tomcat</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <fork>true</fork>
+                            <port>8080</port>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-tomcat</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>shutdown</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
 
