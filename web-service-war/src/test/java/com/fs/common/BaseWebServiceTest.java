@@ -3,23 +3,25 @@ package com.fs.common;
 import com.fs.humanResources.model.address.entities.Address;
 import com.fs.humanResources.model.employee.entities.Employee;
 import org.junit.After;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+@ContextConfiguration(locations = "/test-context.xml")
 public abstract class BaseWebServiceTest {
+
+    @Autowired
+    protected RestTemplate restTemplate;
 
     protected APIHelper apiHelper;
 
     protected SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     protected BaseWebServiceTest() {
-        apiHelper = new APIHelper("localhost", 8080);
-    }
-
-    @After
-    public void tearDowm() {
-        apiHelper.closeHttpClient();
+        apiHelper = new APIHelper("localhost", 8580);
     }
 
     protected Employee createEmployee() throws ParseException {

@@ -24,77 +24,18 @@ import java.util.Date;
 
 public class APIHelper {
 
-    Logger log = Logger.getLogger(APIHelper.class);
-
     private static final String API_PATH = "humanResources-services/api/";
-    private static final String APPLICATION_XML_TYPE = "application/xml";
 
     private String host;
     private int port;
 
-    private DefaultHttpClient httpClient;
-
     public APIHelper(String host, int port) {
         this.host = host;
         this.port = port;
-        this.httpClient = new DefaultHttpClient();
     }
 
-    public <T> Object unmarshalEntityToObject(HttpEntity entity, Class<T> classType) throws IOException, JAXBException {
-        String xmlString = EntityUtils.toString(entity);
-        ByteArrayInputStream input = new ByteArrayInputStream(xmlString.getBytes());
-        JAXBContext jaxbContext = JAXBContext.newInstance(classType);
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        return unmarshaller.unmarshal(new StreamSource(input));
-    }
-
-    public <T> OutputStream marshalObjectToStream(T object, Class<T> classType) throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(classType);
-        Marshaller marshaller = jaxbContext.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        OutputStream outputStream = new ByteArrayOutputStream();
-        marshaller.marshal(object, outputStream);
-        return outputStream;
-    }
-
-    public OutputStream marshalHolidayRequest(HolidayRequest holidayRequest) throws JAXBException {
-        return marshalObjectToStream(holidayRequest, HolidayRequest.class);
-    }
-
-    public HolidayResponse unmarshalHolidayResponse(HttpEntity entity) throws JAXBException, IOException {
-        return (HolidayResponse) unmarshalEntityToObject(entity, HolidayResponse.class);
-    }
-
-    public HttpResponse sendPostRequest(String apiurl, OutputStream postBody) {
-        HttpResponse httpResponse = null;
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-
-        try {
-            String url = getfullAPIUrl(apiurl);
-            log.info("Posting to URL :" + url);
-
-            HttpPost httpPost = new HttpPost(url);
-            httpPost.addHeader("content-type", APPLICATION_XML_TYPE);
-
-            StringEntity entity = new StringEntity(postBody.toString());
-            httpPost.setEntity(entity);
-
-            httpResponse = httpClient.execute(httpPost);
-        } catch (IOException e) {
-            log.error(e);
-        } finally {
-            return httpResponse;
-        }
-    }
-
-    private String getfullAPIUrl(String apiurl) {
+    public String getfullAPIUrl(String apiurl) {
         return "http://" + host + ":" + port + "/" + API_PATH + apiurl;
-    }
-
-    public void closeHttpClient() {
-        if (httpClient != null) {
-            httpClient.getConnectionManager().shutdown();
-        }
     }
 
     public HolidayRequest createHolidayRequest(long employeeId, Date startDate, Date endDate) {
@@ -104,5 +45,4 @@ public class APIHelper {
         holidayRequest.setEndDate(endDate);
         return holidayRequest;
     }
-
 }
